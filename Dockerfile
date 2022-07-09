@@ -1,6 +1,3 @@
-# Build Command
-# sudo docker kill $(sudo docker ps -q);  sudo docker rm $(sudo docker ps -a -q); sudo docker rmi $(sudo docker images -q); sudo docker build --squash --no-cache -t rahimtagchangemme/jupyterhub:jupyterlab-sage .
-
 ARG BASE_CONTAINER=jupyter/datascience-notebook
 FROM $BASE_CONTAINER
 

@@ -27,9 +27,7 @@ RUN mamba create --yes -n sage sage python=3.9 && \
     mamba install --yes -c conda-forge -c plotly "jupyterlab-drawio" \
     "plotly" \
     "jupyterlab-spellchecker" \
-    "jupyter-dash" && \
-    mamba clean --yes --all
-
+    "jupyter-dash" 
 
 RUN mamba install --yes -c conda-forge \
     'r-stargazer' \
@@ -44,9 +42,7 @@ RUN mamba install --yes -c conda-forge \
     'r-ggthemes' \
     'r-modelsummary' \
     'r-tidytext' && \
-    mamba clean --all -f -y && \
-    fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
+    mamba clean --all -f -y 
 
 RUN pip install nbgitpuller && \
     pip install jupyterlab-git && \
@@ -59,15 +55,11 @@ RUN npm cache clean --force && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/jovyan
 
-
-
-
-
-RUN jupyter labextension install jupyterlab-plotly \
-  && jupyter labextension install @jupyter-widgets/jupyterlab-manager plotlywidget \
-  && jupyter labextension install @techrah/text-shortcuts \
-  && jupyter serverextension enable nbgitpuller --sys-prefix \
-  && jupyter lab build
+RUN jupyter labextension install jupyterlab-plotly && \
+    jupyter labextension install @jupyter-widgets/jupyterlab-manager plotlywidget && \
+    jupyter labextension install @techrah/text-shortcuts && \
+    jupyter serverextension enable nbgitpuller --sys-prefix && \
+    jupyter lab build
 
 USER root
 

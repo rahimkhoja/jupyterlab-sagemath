@@ -22,29 +22,52 @@ RUN apt-get update && \
 USER jovyan
 
 # Install Conda Packages (Plotly, SageMath)
-RUN conda create --yes -n sage sage python=3.9 && \
-    conda install --yes "jupyterlab>=3" "ipywidgets>=7.6" && \
-    conda install --yes -c conda-forge -c plotly jupyter-dash && \
-    conda install --yes -c conda-forge jupyterlab-drawio && \
-    conda install -c conda-forge jupyterlab-spellchecker --yes && \
-    conda clean --yes --all
+RUN mamba create --yes -n sage sage python=3.9 && \
+    mamba install --yes "jupyterlab>=3" "ipywidgets>=7.6" && \
+    mamba install --yes -c conda-forge -c plotly "jupyterlab-drawio" \
+    "plotly" \
+    "jupyterlab-spellchecker" \
+    "jupyter-dash"
+
+RUN mamba install --yes -c conda-forge \
+    'r-stargazer' \
+    'r-quanteda' \
+    'r-quanteda.textmodels' \
+    'r-quanteda.textplots' \
+    'r-caret' \
+    'r-ggiraph' \
+    'r-ggextra' \
+    'r-isocodes' \
+    'r-urltools' \
+    'r-ggthemes' \
+    'r-modelsummary' \
+    'r-tidytext' && \
+    mamba clean --all -f -y
 
 RUN pip install nbgitpuller && \
     pip install jupyterlab-git && \
     pip install jupytext --upgrade && \
     pip install jupyterlab-system-monitor && \
     pip install lckr-jupyterlab-variableinspector && \
-    pip install ipywidgets
+    pip install ipywidgets && \
+    pip install jupyterlab_templates && \
+    pip install jupyterlab-code-formatter && \
+    pip install nbdime && \
+    pip install black && \
+    pip install isort
 
 RUN npm cache clean --force && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/jovyan
 
-RUN jupyter labextension install jupyterlab-plotly \
-  && jupyter labextension install @jupyter-widgets/jupyterlab-manager plotlywidget \
-  && jupyter labextension install @techrah/text-shortcuts \
-  && jupyter serverextension enable nbgitpuller --sys-prefix \
-  && jupyter lab build
+RUN jupyter labextension install jupyterlab-plotly && \
+    jupyter labextension install @jupyter-widgets/jupyterlab-manager plotlywidget && \
+    jupyter labextension install @techrah/text-shortcuts && \
+    jupyter labextension install jupyterlab-spreadsheet && \
+    jupyter labextension install jupyterlab_templates && \
+    jupyter serverextension enable --py jupyterlab_templates && \
+    jupyter serverextension enable nbgitpuller --sys-prefix && \
+    jupyter lab build
 
 USER root
 
@@ -63,7 +86,5 @@ RUN chown -R jovyan:users /home/jovyan && \
 USER jovyan
 
 ENV HOME=/home/jovyan
-
-ENV PIPELINE=github-actions
 
 WORKDIR $HOME

@@ -22,12 +22,31 @@ RUN apt-get update && \
 USER jovyan
 
 # Install Conda Packages (Plotly, SageMath)
-RUN conda create --yes -n sage sage python=3.9 && \
-    conda install --yes "jupyterlab>=3" "ipywidgets>=7.6" && \
-    conda install --yes -c conda-forge -c plotly jupyter-dash && \
-    conda install --yes -c conda-forge jupyterlab-drawio && \
-    conda install -c conda-forge jupyterlab-spellchecker --yes && \
-    conda clean --yes --all
+RUN mamba create --yes -n sage sage python=3.9 && \
+    mamba install --yes "jupyterlab>=3" "ipywidgets>=7.6" && \
+    mamba install --yes -c conda-forge -c plotly "jupyterlab-drawio" \
+    "plotly" \
+    "jupyterlab-spellchecker" \
+    "jupyter-dash" && \
+    mamba clean --yes --all
+
+
+RUN mamba install --yes -c conda-forge \
+    'r-stargazer' \
+    'r-quanteda' \
+    'r-quanteda.textmodels' \
+    'r-quanteda.textplots' \
+    'r-caret' \
+    'r-ggiraph' \
+    'r-ggextra' \
+    'r-isocodes' \
+    'r-urltools' \
+    'r-ggthemes' \
+    'r-modelsummary' \
+    'r-tidytext' && \
+    mamba clean --all -f -y && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
 
 RUN pip install nbgitpuller && \
     pip install jupyterlab-git && \
@@ -39,6 +58,10 @@ RUN pip install nbgitpuller && \
 RUN npm cache clean --force && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/jovyan
+
+
+
+
 
 RUN jupyter labextension install jupyterlab-plotly \
   && jupyter labextension install @jupyter-widgets/jupyterlab-manager plotlywidget \

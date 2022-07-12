@@ -27,7 +27,7 @@ RUN mamba create --yes -n sage sage python=3.9 && \
     mamba install --yes -c conda-forge -c plotly "jupyterlab-drawio" \
     "plotly" \
     "jupyterlab-spellchecker" \
-    "jupyter-dash" 
+    "jupyter-dash"
 
 RUN mamba install --yes -c conda-forge \
     'r-stargazer' \
@@ -42,14 +42,19 @@ RUN mamba install --yes -c conda-forge \
     'r-ggthemes' \
     'r-modelsummary' \
     'r-tidytext' && \
-    mamba clean --all -f -y 
+    mamba clean --all -f -y
 
 RUN pip install nbgitpuller && \
     pip install jupyterlab-git && \
     pip install jupytext --upgrade && \
     pip install jupyterlab-system-monitor && \
     pip install lckr-jupyterlab-variableinspector && \
-    pip install ipywidgets
+    pip install ipywidgets && \
+    pip install jupyterlab_templates && \
+    pip install jupyterlab-code-formatter && \
+    pip install nbdime && \
+    pip install black && \
+    pip install isort
 
 RUN npm cache clean --force && \
     fix-permissions $CONDA_DIR && \
@@ -58,6 +63,9 @@ RUN npm cache clean --force && \
 RUN jupyter labextension install jupyterlab-plotly && \
     jupyter labextension install @jupyter-widgets/jupyterlab-manager plotlywidget && \
     jupyter labextension install @techrah/text-shortcuts && \
+    jupyter labextension install jupyterlab-spreadsheet && \
+    jupyter labextension install jupyterlab_templates && \
+    jupyter serverextension enable --py jupyterlab_templates && \
     jupyter serverextension enable nbgitpuller --sys-prefix && \
     jupyter lab build
 
@@ -78,7 +86,5 @@ RUN chown -R jovyan:users /home/jovyan && \
 USER jovyan
 
 ENV HOME=/home/jovyan
-
-ENV PIPELINE=github-actions
 
 WORKDIR $HOME

@@ -19,10 +19,6 @@ RUN apt-get update && \
     apt-get clean && \
     apt-get autoremove
 
-# Install JS Kernel
-RUN npm install -g ijavascript && \
-    ijsinstall
-
 USER jovyan
 
 # Install Conda Packages (Plotly, SageMath)
@@ -67,6 +63,10 @@ RUN pip install nbgitpuller \
     ccxt \
     isort \ &&
     pip install jupytext --upgrade
+
+# Install JS Kernel
+RUN npm install -g ijavascript && \
+    ijsinstall
 
 RUN npm cache clean --force && \
     fix-permissions $CONDA_DIR && \

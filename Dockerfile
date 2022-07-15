@@ -30,7 +30,7 @@ RUN mamba create --yes -n sage sage python=3.9 && \
     "jupyter-dash" \
     "xeus-cling"
 
-RUN install.packages("ggiraphExtra")
+RUN R -e 'devtools::install_github("cardiomoon/ggiraphExtra")'
 
 RUN mamba install --yes -c conda-forge \
     'r-stargazer' \
@@ -61,7 +61,7 @@ RUN pip install nbgitpuller \
     black \
     pandas_ta \
     ccxt \
-    isort \ &&
+    isort && \
     pip install jupytext --upgrade
 
 # Install JS Kernel

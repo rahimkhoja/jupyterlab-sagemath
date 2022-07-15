@@ -19,6 +19,10 @@ RUN apt-get update && \
     apt-get clean && \
     apt-get autoremove
 
+# Install JS Kernel
+RUN npm install -g ijavascript && \
+    ijsinstall
+
 USER jovyan
 
 # Install Conda Packages (Plotly, SageMath)
@@ -27,13 +31,17 @@ RUN mamba create --yes -n sage sage python=3.9 && \
     mamba install --yes -c conda-forge -c plotly "jupyterlab-drawio" \
     "plotly" \
     "jupyterlab-spellchecker" \
-    "jupyter-dash"
+    "jupyter-dash" \
+    "xeus-cling"
+
+RUN install.packages("ggiraphExtra")
 
 RUN mamba install --yes -c conda-forge \
     'r-stargazer' \
     'r-quanteda' \
     'r-quanteda.textmodels' \
     'r-quanteda.textplots' \
+    'r-quanteda.textstats' \
     'r-caret' \
     'r-ggiraph' \
     'r-ggextra' \
@@ -41,20 +49,24 @@ RUN mamba install --yes -c conda-forge \
     'r-urltools' \
     'r-ggthemes' \
     'r-modelsummary' \
+    'r-nsyllable' \
+    'r-proxyc' \
     'r-tidytext' && \
     mamba clean --all -f -y
 
-RUN pip install nbgitpuller && \
-    pip install jupyterlab-git && \
-    pip install jupytext --upgrade && \
-    pip install jupyterlab-system-monitor && \
-    pip install lckr-jupyterlab-variableinspector && \
-    pip install ipywidgets && \
-    pip install jupyterlab_templates && \
-    pip install jupyterlab-code-formatter && \
-    pip install nbdime && \
-    pip install black && \
-    pip install isort
+RUN pip install nbgitpuller \
+    jupyterlab-git \
+    jupyterlab-system-monitor \
+    lckr-jupyterlab-variableinspector \
+    ipywidgets \
+    jupyterlab_templates \
+    jupyterlab-code-formatter \
+    nbdime \
+    black \
+    pandas_ta \
+    ccxt \
+    isort \ &&
+    pip install jupytext --upgrade
 
 RUN npm cache clean --force && \
     fix-permissions $CONDA_DIR && \

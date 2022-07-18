@@ -30,7 +30,10 @@ RUN mamba create --yes -n sage sage python=3.9 && \
     "jupyter-dash" \
     "xeus-cling"
 
-RUN R -e 'devtools::install_github("cardiomoon/ggiraphExtra")'
+RUN R -e 'require(devtools); \
+    install_version("ggiraphExtra", repos = "http://cran.us.r-project.org", quiet = TRUE); \
+    install_version("lisp", version = "0.1", repos = "http://cran.us.r-project.org", quiet = TRUE); \
+    install_version("translate", version = "0.1.2", repos = "http://cran.us.r-project.org", quiet = TRUE)'
 
 RUN mamba install --yes -c conda-forge \
     'r-stargazer' \
